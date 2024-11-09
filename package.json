@@ -13,7 +13,8 @@
   "keywords": [
     "#express",
     "#node",
-    "#jwt"
+    "#jwt",
+    "#middleware"
   ],
   "author": "SnippetServices-Group4",
   "license": "ISC",
