@@ -20,7 +20,6 @@ const verifyToken = (req, res, next) => {
         if (err) {
             return res.status(403).json({ message: 'Invalid token' });
         }
-        console.log(decoded.aud[0]);
 
         // Check if the 'iss' claim matches your domain
         if (decoded.aud[0] !== AUTH0_AUDIENCE) {
@@ -32,7 +31,6 @@ const verifyToken = (req, res, next) => {
             userId: decoded.sub,
             username: decoded.username,
         };
-        console.log(decoded);
 
         next();
     });
@@ -43,17 +41,15 @@ const forwardRequest = (req, res) => {
     const { userId, username } = req.user;
 
     const serviceName = req.originalUrl.split('/')[1];
-    console.log(serviceName);
 
     // Modify the request path to remove the service-specific prefix (e.g., '/parser/*' becomes '/*')
     const servicePath = req.originalUrl.replace(`/${serviceName}`, '');
-    console.log(servicePath);
 
     axios({
         method: req.method,
         url: `http://${serviceName}:8080${servicePath}`,
         headers: {
-            'userID': userId,
+            'userId': userId,
             'username': username,
         },
         data: req.body,
@@ -63,6 +59,7 @@ const forwardRequest = (req, res) => {
         })
         .catch(err => {
             res.status(500).json({ message: 'Error forwarding request', error: err.message });
+            console.log(err.message);
         });
 };
 
