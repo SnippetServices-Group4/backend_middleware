@@ -58,8 +58,17 @@ const forwardRequest = (req, res) => {
             res.status(response.status).json(response.data);
         })
         .catch(err => {
-            res.status(500).json({ message: 'Error forwarding request', error: err.message });
-            console.log(err.message);
+            if (err.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                res.status(err.response.status).json(err.response.data);
+            } else if (err.request) {
+                // The request was made but no response was received
+                res.status(500).json({ message: 'No response received from the service', error: err.message });
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                res.status(500).json({ message: 'Error in setting up the request', error: err.message });
+            }
         });
 };
 
