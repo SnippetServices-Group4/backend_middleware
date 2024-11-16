@@ -40,6 +40,8 @@ const verifyToken = (req, res, next) => {
 const forwardRequest = (req, res) => {
     const { userId, username } = req.user;
 
+    console.log(`Forwarding request to ${req.originalUrl}`);
+
     const serviceName = req.originalUrl.split('/')[1];
 
     // Modify the request path to remove the service-specific prefix (e.g., '/parser/*' becomes '/*')
