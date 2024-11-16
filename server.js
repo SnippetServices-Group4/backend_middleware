@@ -37,38 +37,34 @@ const verifyToken = (req, res, next) => {
 };
 
 const forwardRequest = (req, res) => {
-    const {userId, username} = req.user;
+    const { userId, username } = req.user;
 
     console.log(`Forwarding request to ${req.originalUrl}`);
+    console.log(`Request headers: ${JSON.stringify(req.headers)}`);
 
     const serviceName = req.originalUrl.split('/')[1];
-
-    // Modify the request path to remove the service-specific prefix (e.g., '/parser/*' becomes '/*')
     const servicePath = req.originalUrl.replace(`/${serviceName}`, '');
 
+    // Forward the Content-Type and body to the backend service
     axios({
         method: req.method,
         url: `http://${serviceName}:8080${servicePath}`,
         headers: {
             'userId': userId,
             'username': username,
-            'Content-Type': req.headers['content-type'],
+            'Content-Type': req.headers['content-type'], // Ensure Content-Type is passed
         },
-        data: req.body,
+        data: req.body,  // Forward the body
     })
         .then(response => {
             res.status(response.status).json(response.data);
         })
         .catch(err => {
             if (err.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
                 res.status(err.response.status).json(err.response.data);
             } else if (err.request) {
-                // The request was made but no response was received
                 res.status(500).json({ message: 'No response received from the service', error: err.message });
             } else {
-                // Something happened in setting up the request that triggered an Error
                 res.status(500).json({ message: 'Error in setting up the request', error: err.message });
             }
         });
