@@ -38,9 +38,10 @@ const verifyToken = (req, res, next) => {
 
 // Generic route handler to forward requests to the corresponding service
 const forwardRequest = (req, res) => {
-    const { userId, username } = req.user;
+    const {userId, username} = req.user;
 
     console.log(`Forwarding request to ${req.originalUrl}`);
+    console.log(`Content type header: ${req.headers['Content-type']}`);
 
     const serviceName = req.originalUrl.split('/')[1];
 
