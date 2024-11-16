@@ -41,7 +41,7 @@ const forwardRequest = (req, res) => {
     const {userId, username} = req.user;
 
     console.log(`Forwarding request to ${req.originalUrl}`);
-    console.log(`Content type header: ${req.headers['Content-Type']}`);
+    console.log(`Request headers: ${JSON.stringify(req.headers)}`);
 
     const serviceName = req.originalUrl.split('/')[1];
 
