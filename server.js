@@ -4,6 +4,7 @@ const axios = require('axios');
 require('dotenv').config(); // Load environment variables from .env file
 const app = express();
 const port = 3000;
+app.use(express.json());
 
 const AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE;
 const AUTH0_SECRET_KEY = process.env.AUTH0_SECRET_KEY;
